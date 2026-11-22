@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAHÍA ROJA — Port Smugglers of the Night Market</title>
+<style>
+*{box-sizing:border-box;margin:0;font-family:'Segoe UI',system-ui,sans-serif}body{background:#000;overflow:hidden;color:#fff}
+#game canvas{display:block;width:100vw;height:100vh}
+.panel{background:rgba(10,12,20,.78);border:1px solid rgba(255,180,80,.55);border-radius:10px;padding:8px 10px;backdrop-filter:blur(3px)}
+#tl{position:fixed;top:10px;left:10px;width:305px;z-index:5}
+#mtitle{color:#ffd76a;font-weight:800;font-size:15px}#mstage{color:#7ef0c1;font-weight:700;margin-top:2px}#mnext{font-size:12.5px;margin-top:2px}
+#dispatch{margin-top:8px;font-size:12px;line-height:1.5;color:#cfe6ff}
+#feed{margin-top:6px;font-size:11.5px;color:#ffe9b0;line-height:1.45;min-height:34px}
+#tr{position:fixed;top:10px;right:10px;text-align:right;z-index:5;width:300px}
+#clock{font-size:15px;color:#ffd76a}#cash{font-size:34px;font-weight:900;color:#7ef07e;text-shadow:0 2px 6px #000}
+#stars{font-size:26px;color:#ff5252;letter-spacing:3px}#sight{color:#ffb74d;font-weight:800;font-size:13px}
+#wheel{display:flex;gap:4px;justify-content:flex-end;margin-top:6px}
+.slot{width:44px;height:44px;background:rgba(20,20,30,.85);border:2px solid #666;border-radius:8px;text-align:center;font-size:19px;padding-top:3px}
+.slot.sel{border-color:#ffd700;background:rgba(80,60,0,.85)}.slot.lock{opacity:.45}.slot small{display:block;font-size:9px;color:#ffd76a}
+#bl{position:fixed;left:10px;bottom:10px;z-index:5;text-align:left}
+#minimap{border-radius:50%;border:3px solid #ffd76a;background:#1c2a1e}
+#district{font-weight:800;color:#ffd76a;margin-top:4px;font-size:15px;text-shadow:0 1px 4px #000}
+#respectbar{width:150px;height:10px;background:#333;border-radius:5px;margin-top:3px}#respectfill{height:100%;background:linear-gradient(90deg,#e67e22,#ffd700);border-radius:5px;width:10%}
+#respecttxt{font-size:11px;color:#ffe9b0}#collect{font-size:12.5px;color:#ffd700;margin-top:3px;font-weight:700}
+#crew{display:flex;gap:6px;margin-top:6px}.crewcard{background:rgba(10,12,20,.8);border:1px solid #7ef0c1;border-radius:8px;padding:5px 7px;font-size:11px;min-width:96px}
+#br{position:fixed;right:10px;bottom:10px;z-index:5;text-align:right}
+#radio{font-size:13px;color:#ff9ff3;font-weight:700}#vehpanel{margin-top:6px}
+#vspeed{font-size:40px;font-weight:900;color:#fff}.unit{font-size:14px;color:#aaa}
+#prompt{position:fixed;left:50%;bottom:19%;transform:translateX(-50%);background:#ffd700;color:#000;font-weight:900;padding:9px 20px;border-radius:10px;font-size:18px;z-index:6;display:none}
+#coverhint{position:fixed;left:50%;bottom:26%;transform:translateX(-50%);background:rgba(0,60,30,.88);color:#7ef0c1;font-weight:800;padding:7px 16px;border-radius:9px;font-size:15px;z-index:6;display:none}
+#dialogue{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:620px;max-width:92vw;display:none;z-index:7;background:rgba(12,10,24,.92);border:2px solid #ffd76a;border-radius:14px;padding:10px 14px;align-items:center;gap:12px}
+#davatar{font-size:52px}#dname{color:#ffd76a;font-weight:900;font-size:17px}#drole{color:#7ef0c1;font-size:12px;font-weight:700}
+#dline{font-size:15px;margin-top:2px}#dmech{color:#ffb74d;font-size:12.5px;margin-top:3px}
+#banner{position:fixed;top:24%;left:50%;transform:translateX(-50%);text-align:center;z-index:8;background:rgba(20,40,10,.9);border:3px solid #ffd700;border-radius:16px;padding:18px 44px;display:none;font-size:17px}
+.passtitle{font-size:42px;font-weight:900;letter-spacing:4px;color:#ffd700;text-shadow:0 3px 0 #7a5200}
+.dmgnum{position:fixed;color:#ff5252;font-weight:900;font-size:24px;z-index:9;text-shadow:0 2px 3px #000;pointer-events:none}
+#title{position:fixed;inset:0;z-index:20;background:linear-gradient(180deg,#2b1055 0%,#7597de 30%,#ff7e5f 62%,#3a1c10 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#title h1{font-size:96px;letter-spacing:10px;font-weight:900;color:#fff;text-shadow:0 6px 0 #c0392b,0 12px 30px #000}
+#title .tag{font-size:21px;color:#ffe9b0;font-style:italic;margin:8px}
+.skyline{font-size:44px;letter-spacing:6px}
+#titleslots{display:flex;gap:10px;margin:16px}.tslot{background:rgba(0,0,0,.55);border:1px solid #ffd76a;border-radius:10px;padding:10px 16px;font-size:13px}
+#startbtn{background:#ffd700;color:#000;font-size:22px;font-weight:900;border:none;border-radius:12px;padding:14px 44px;cursor:pointer}
+#mapscreen{position:fixed;inset:0;z-index:15;background:rgba(5,8,12,.94);display:none;padding:18px;overflow:auto}
+#mapscreen h2{color:#ffd76a;letter-spacing:3px}
+.savebtn{background:#223;color:#ffe9b0;border:1px solid #ffd76a;border-radius:8px;padding:8px 12px;margin:4px;cursor:pointer;font-size:14px}
+.statgrid{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}.statbox{background:rgba(20,26,36,.9);border:1px solid #556;border-radius:12px;padding:12px 16px;min-width:250px;font-size:14px;line-height:1.6}
+#pct{font-size:38px;color:#7ef07e;font-weight:900}
+#autopilot-result{position:fixed;top:4px;left:50%;transform:translateX(-50%);z-index:30;color:#0f0;background:#000;padding:2px 10px;font-size:13px}
+</style></head><body>
+<div id="game"></div><div id="dmgnums"></div><div id="autopilot-result"></div>
+<div id="tl" class="panel"><div id="mtitle">MISSION</div><div id="mstage"></div><div id="mnext"></div><div id="dispatch"></div><div id="feed"></div></div>
+<div id="tr" class="panel"><div id="clock">17:00</div><div id="cash">$250</div><div id="stars"></div><div id="sight"></div><div id="wheel"></div></div>
+<div id="bl"><canvas id="minimap" width="150" height="150"></canvas><div id="district">Mercado Nocturno</div><div id="respectbar"><div id="respectfill"></div></div><div id="respecttxt"></div><div id="collect"></div><div id="crew"></div></div>
+<div id="br" class="panel"><div id="radio"></div><div id="vehpanel" style="display:none"><div id="vmodel"></div><div id="vcond"></div><span id="vspeed">0</span><span class="unit">km/h</span><div>GEAR <b id="vgear">N</b></div></div></div>
+<div id="prompt"></div><div id="coverhint"></div>
+<div id="dialogue"><div id="davatar">👵</div><div><div id="dname"></div><div id="drole"></div><div id="dline"></div><div id="dmech"></div></div></div>
+<div id="banner"></div>
+<div id="mapscreen"><h2>🗺 BAHÍA ROJA — FULL MAP &amp; STATS</h2><div style="display:flex;gap:18px;flex-wrap:wrap"><canvas id="mapcanvas" width="760" height="470" style="border:2px solid #ffd76a;border-radius:12px"></canvas>
+<div class="statbox"><div id="pct">0% COMPLETE</div><div id="checklist"></div><h3 style="color:#ffd76a;margin-top:8px">MISSION MEDALS</h3><div id="medals"></div></div></div>
+<div class="statgrid"><div class="statbox"><h3 style="color:#ffd76a">CAREER STATS</h3><div id="career"></div></div>
+<div class="statbox"><h3 style="color:#ffd76a">RANK LADDER</h3><div id="ladder"></div></div>
+<div class="statbox"><h3 style="color:#ffd76a">POI LEGEND</h3>🟡 GPS objective · 🔵 police · 🟠 district hub<br>🚢 Muelle Seis docks · 🛍 Mercado stalls · 🏖 Playa Ceniza<br><h3 style="color:#ffd76a;margin-top:8px">SAVE SLOTS (click to save)</h3><div id="slots"></div></div></div>
+<p style="color:#aaa;margin-top:10px">M or Tab to close · GPS route is the dashed gold line</p></div>
+<div id="title"><div class="skyline">🏗️ 🚢 🌇 🛍️ 🌴</div><h1>BAHÍA ROJA</h1><div class="tag">“Every stall hides something. Every tide brings it in.”</div>
+<div style="color:#fff;font-size:15px">Run a market-stall smuggling ring · Cover shootouts · Witness system · 7 missions · 5 districts · 20 lost cargo crates</div>
+<div id="titleslots"></div><button id="startbtn">▶ START — MEET DOÑA CARMEN</button><div style="color:#ddd;margin-top:12px;font-size:13px">WASD move · SPACE cover · E steal/interact · F shoot · Z/X/C crew · M map · Tab stats</div></div>
+<script type="importmap">{"imports":{"three":"./vendor/three.min.js"}}</script>
+<script type="module" src="./src/main.js"></script>
+</body></html>
