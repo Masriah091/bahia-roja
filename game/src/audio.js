@@ -1,0 +1,4 @@
+
+export class AudioSys{constructor(){this.ctx=null}ensure(){if(!this.ctx){try{this.ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume()}
+tone(f,d,type='sine',g=0.06){if(!this.ctx)return;const o=this.ctx.createOscillator(),v=this.ctx.createGain();o.type=type;o.frequency.value=f;v.gain.setValueAtTime(g,this.ctx.currentTime);v.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime+d);o.connect(v).connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+d)}
+shot(){this.tone(140,0.12,'square',0.09);this.tone(70,0.08,'sawtooth',0.05)}siren(){this.tone(660,0.25,'triangle',0.04);setTimeout(()=>this.tone(520,0.25,'triangle',0.04),200)}engine(){this.tone(55,0.4,'sawtooth',0.03)}blip(){this.tone(880,0.06,'sine',0.04)}gull(){this.tone(1200,0.15,'sine',0.02)}chatter(){this.tone(300+Math.random()*0,0.05,'square',0.015)}}
